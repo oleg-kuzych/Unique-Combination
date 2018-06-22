@@ -1,7 +1,6 @@
 package com.ok.combination;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -37,7 +36,7 @@ public class UniqueCombination<T> {
     public List<List<T>> getCombinationsForAllKStartingFrom(int n) {
         if (n <= data.size()) {
             return IntStream.iterate(n, i -> i + 1)
-                    .limit(data.size())
+                    .limit(data.size() - n + 1)
                     .mapToObj(this::getCombinations)
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
@@ -46,9 +45,8 @@ public class UniqueCombination<T> {
     }
 
     public List<List<T>> getCombinations(int k) {
-        List<List<T>> combinations = new ArrayList<>();
-
-        if (k < data.size()) {
+        if (k <= data.size()) {
+            List<List<T>> combinations = new ArrayList<>();
             TripleConsumer inner = (indexes, cIdx, startFrom) -> {
                 List<T> combination = new ArrayList<>();
                 for (int idx : indexes) {
@@ -62,15 +60,9 @@ public class UniqueCombination<T> {
             // start with initial values
             inner.accept(new int[k], 0, 0);
 
-        } else if (k == data.size()) {
-            combinations.add(data);
-        } else if (k == 1) {
-            data.stream()
-                    .map(Collections::singletonList)
-                    .forEach(combinations::add);
+            return combinations;
         }
-
-        return combinations;
+        throw new IllegalArgumentException("K is greater than N!");
     }
 
     @FunctionalInterface

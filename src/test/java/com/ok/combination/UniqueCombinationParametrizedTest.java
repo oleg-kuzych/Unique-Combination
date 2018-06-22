@@ -13,6 +13,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -61,9 +62,8 @@ public class UniqueCombinationParametrizedTest {
         boolean expectException = list.size() < k; // is negative case
         try {
             assertEquals(expectedNumberOfCombinations, combinator.getNumberOfCombinations(k), 0.000001d);
-            if (expectException) {
-                fail("No exception is generated");
-            }
+
+            assertFalse("No exception is generated for negative case", expectException);
         } catch (IllegalArgumentException e) {
             assertTrue("Not expected exception", expectException);
         }
@@ -71,11 +71,19 @@ public class UniqueCombinationParametrizedTest {
 
     @Test
     public void checkCombinations() {
-        List<List<Integer>> result = combinator.getCombinations(k);
-        assertEquals("Size is different", expectedCombinations.size(), result.size());
+        boolean expectException = list.size() < k; // is negative case
 
-        for (List<Integer> expectCombination : expectedCombinations) {
-            assertThat("No combination found", result, hasItem(expectCombination));
+        try {
+            List<List<Integer>> result = combinator.getCombinations(k);
+            assertFalse("No exception is generated for negative case", expectException);
+
+            assertEquals("Size is different", expectedCombinations.size(), result.size());
+
+            for (List<Integer> expectCombination : expectedCombinations) {
+                assertThat("No combination found", result, hasItem(expectCombination));
+            }
+        } catch (IllegalArgumentException e) {
+            assertTrue("Not expected exception", expectException);
         }
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeThat;
+import static org.junit.Assert.assertThat;
 
 @RunWith(JUnit4.class)
 public class UniqueCombinationTest {
@@ -34,7 +34,7 @@ public class UniqueCombinationTest {
 
             List<List<String>> list = combinator.getCombinations(i);
             for (List<String> item : list) {
-                assumeThat(result, hasItem(item));
+                assertThat(result, hasItem(item));
             }
         }
 
